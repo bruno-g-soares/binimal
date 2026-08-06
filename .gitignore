@@ -1,0 +1,11 @@
+**/bin/
+**/obj/
+.vs/
+.idea/
+*.user
+*.suo
+*.nupkg
+TestResults/
+dist/
+assets/preview/icon-sheet.png
+assets/preview/tray-16px-enlarged.png

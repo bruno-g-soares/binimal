@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net481</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <RootNamespace>Binimal</RootNamespace>
+    <AssemblyName>Binimal</AssemblyName>
+    <ApplicationIcon>Assets\app.ico</ApplicationIcon>
+    <Nullable>enable</Nullable>
+    <Version>0.1.0</Version>
+    <Authors>Bruno Soares</Authors>
+    <Company>Bruno Soares</Company>
+    <Product>Binimal</Product>
+    <Description>A minimal, open-source Recycle Bin utility for the Windows notification area.</Description>
+    <RepositoryUrl>https://github.com/bruno-g-soares/binimal</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <GenerateSupportedRuntime>false</GenerateSupportedRuntime>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+    <Compile Include="..\Binimal.Core\*.cs" Link="Core\%(Filename)%(Extension)" />
+    <EmbeddedResource Include="Assets\bin-empty.ico" LogicalName="Binimal.Assets.bin-empty.ico" />
+    <EmbeddedResource Include="Assets\bin-full.ico" LogicalName="Binimal.Assets.bin-full.ico" />
+  </ItemGroup>
+</Project>

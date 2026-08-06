@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    runs-on: windows-latest
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore
+        run: dotnet restore Binimal.sln
+
+      - name: Build
+        run: dotnet build Binimal.sln --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test Binimal.sln --configuration Release --no-build
+
+      - name: Exercise native Recycle Bin query
+        shell: pwsh
+        run: |
+          $process = Start-Process -FilePath "src/Binimal.App/bin/Release/net481/Binimal.exe" -ArgumentList "--self-test" -Wait -PassThru
+          if ($process.ExitCode -ne 0) {
+            throw "Binimal native self-test failed with exit code $($process.ExitCode)."
+          }
+
+      - name: Upload portable executable
+        uses: actions/upload-artifact@v4
+        with:
+          name: Binimal-win
+          path: src/Binimal.App/bin/Release/net481/Binimal.exe
+          if-no-files-found: error
