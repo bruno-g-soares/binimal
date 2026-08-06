@@ -8,12 +8,12 @@
 
 ## Features
 
-- Dynamic tray icon: blue when empty, orange paper when full
+- Neutral monochrome Fluent UI tray icon: outline when empty, solid when full
 - Left-click to open the Recycle Bin
 - Right-click to open or empty it
 - Uses Windows' standard confirmation before permanently emptying files
 - Optional **Start with Windows** toggle
-- One portable executable, currently under 100 KB
+- A single portable application executable, currently under 100 KB; release ZIPs also include licence documents
 - One running instance per Windows session
 - Checks Recycle Bins across available local drives
 - No network access, telemetry, updater, background service, or PowerShell
@@ -32,6 +32,20 @@ It may also run on Windows 10 systems with .NET Framework 4.8.1 installed, but W
 3. Run `Binimal.exe`.
 4. If desired, right-click its tray icon and enable **Start with Windows**.
 5. In Windows 11, use **Settings → Personalization → Taskbar → Other system tray icons** to keep Binimal visible outside the overflow menu.
+
+## Uninstall
+
+Binimal is portable, so there is no installer or system-wide uninstall process:
+
+1. Right-click the tray icon and disable **Start with Windows** if it is enabled.
+2. Choose **Exit**.
+3. Delete `Binimal.exe`. Delete the whole folder only if it is a dedicated Binimal folder.
+
+Binimal creates no service, driver, scheduled task, AppData database, or administrator-level configuration. If the executable was deleted before startup was disabled, remove the leftover per-user value with:
+
+```cmd
+reg delete "HKCU\Software\Microsoft\Windows\CurrentVersion\Run" /v Binimal /f
+```
 
 ### Unsigned application notice
 
@@ -66,7 +80,7 @@ Recycle Bin status and emptying use the documented Windows Shell APIs `SHQueryRe
 Prerequisites:
 
 - .NET 8 SDK (used as the build toolchain)
-- Python 3 and Pillow only when regenerating icon files
+- Python 3, CairoSVG, and Pillow only when regenerating icon files
 
 ```powershell
 dotnet restore Binimal.sln
@@ -80,11 +94,15 @@ The portable executable is produced at:
 src\Binimal.App\bin\Release\net481\Binimal.exe
 ```
 
-Regenerate the original icon assets with:
+Regenerate the Fluent UI-derived icon assets in an isolated environment with:
 
 ```powershell
-python tools\generate_icons.py
+python -m venv .venv-icons
+.\.venv-icons\Scripts\python -m pip install -r tools\requirements-icons.txt
+.\.venv-icons\Scripts\python tools\generate_icons.py
 ```
+
+The generated ICO files under `src/Binimal.App/Assets` are committed release inputs. Direct Python dependencies are pinned in `tools/requirements-icons.txt`, but those pins do not fully lock native rendering: byte-for-byte output may vary with Python, Cairo, and platform versions.
 
 ## Project structure
 
@@ -92,8 +110,8 @@ python tools\generate_icons.py
 src/Binimal.App/       Windows tray application and native Shell integration
 src/Binimal.Core/      Testable application behavior
 tests/                  xUnit tests
-assets/source/          Original editable SVG artwork
-tools/generate_icons.py Deterministic ICO generator
+assets/source/          Licensed upstream SVG sources and licence text
+tools/generate_icons.py ICO generator for intentional asset updates
 ```
 
 ## Contributing
@@ -102,4 +120,4 @@ Issues and pull requests are welcome. Keep Binimal focused: small, transparent, 
 
 ## Licence
 
-Code and original artwork are available under the [MIT Licence](LICENSE).
+Binimal's code is available under the [MIT Licence](LICENSE). The Fluent UI System Icons retain Microsoft's MIT licence; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

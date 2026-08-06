@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-  <title>Binimal application icon</title>
-  <rect x="20" y="20" width="216" height="216" rx="48" fill="#111827"/>
-  <path d="M72 78h112M106 60h44" fill="none" stroke="#63B3FF" stroke-width="16" stroke-linecap="round"/>
-  <path d="M82 92h92l-10 104H92L82 92Z" fill="#63B3FF"/>
-  <path d="M112 116v56M144 116v56" stroke="#111827" stroke-width="10" stroke-linecap="round" opacity=".8"/>
-</svg>
