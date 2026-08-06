@@ -56,10 +56,14 @@ jobs:
         env:
           TAG_NAME: ${{ github.ref_name }}
         run: |
-          New-Item -ItemType Directory -Force -Path dist | Out-Null
-          Copy-Item "src/Binimal.App/bin/Release/net481/Binimal.exe" "dist/Binimal.exe"
+          $package = "dist/package"
+          New-Item -ItemType Directory -Force -Path "$package/LICENSES" | Out-Null
+          Copy-Item "src/Binimal.App/bin/Release/net481/Binimal.exe" "$package/Binimal.exe"
+          Copy-Item "THIRD_PARTY_NOTICES.md" "$package/THIRD_PARTY_NOTICES.md"
+          Copy-Item "LICENSE" "$package/LICENSE"
+          Copy-Item "assets/source/fluent-ui-system-icons/LICENSE" "$package/LICENSES/Fluent-UI-System-Icons-MIT.txt"
           $archive = "dist/Binimal-$env:TAG_NAME-win.zip"
-          Compress-Archive -Path "dist/Binimal.exe" -DestinationPath $archive
+          Compress-Archive -Path "$package/*" -DestinationPath $archive
           $hash = (Get-FileHash -Algorithm SHA256 $archive).Hash.ToLowerInvariant()
           "$hash  $(Split-Path -Leaf $archive)" | Set-Content -NoNewline "$archive.sha256"
 
